@@ -7,8 +7,31 @@ public class Player : MonoBehaviour
 
     PlayerInput playerInput;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField] float groundNormalYMin = 0.7f;
+    bool isGrounded;
+
+   
+    private void FixedUpdate()
+    {
+        isGrounded = false;
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        foreach (var contact in collision.contacts)
+        {
+            if (contact.normal.y >= groundNormalYMin)
+            {
+                isGrounded = true;
+            }
+        }
+    }
+
+    
+        // ƒWƒƒƒ“ƒv
+ 
+// Start is called once before the first execution of Update after the MonoBehaviour is created
+void Start()
     {
         playerInput = GetComponent<PlayerInput>();
     }
@@ -16,6 +39,7 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         var moveVec = playerInput.actions["Move"].ReadValue<Vector2>();
 
         var cameraDir = playerInput.camera.transform.forward;
@@ -28,5 +52,8 @@ public class Player : MonoBehaviour
             cameraDir * moveVec.y * speedMax
             + cameraRight * moveVec.x * speedMax;
         transform.position = transform.position + moveVec3D * Time.deltaTime;
+
+
+
     }
 }
